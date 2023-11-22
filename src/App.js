@@ -1,31 +1,57 @@
-import { useState } from 'react';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-        <Counter></Counter>
+      {/* <Counter></Counter> */}
+      <ExternalUsers></ExternalUsers>
     </div>
   );
-  }
-  function Counter(){
-    const [count, setCount] = useState(15);
+}
+function ExternalUsers() {
+  const [users, setUsers] = useState([]);
+  // useEffect(()=>{} , [])
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => setUsers(data));
+  }, []);
+  return (
+    <div>
+      <h2>External Users</h2>
+      <p>{users.length}</p>
+      {
+        users.map(user => <User name={user.name} phone={user.phone} email={user.email} address={user.address.city}></User>)
+      }
+    </div>
+  );
+}
+function User(props){
+  return(
+    <div style={{border:'5px solid purple', margin: "25px"}}>
+      <h3>Name: {props.name}</h3>p
+      <h4>Phone : {props.phone}</h4>
+      <h5>Address : {props.address}</h5>
+      <p>Email : {props.email}</p>
+    </div>
+  )
+};
 
-    const increaseCount = ()=>setCount(count + 1);
-    
-    const decreaseCount=()=>setCount(count -1)
+function Counter() {
+  const [count, setCount] = useState(15);
 
-    // const decreaseCount = ()=>{
-    //   const newCount = count - 1;
-    //   setCount(newCount)
-    // }
-    return(
-      <div>
-        <h1>Count : {count}</h1>
-        <button onClick={increaseCount}>Increase </button>
-        <button onClick={decreaseCount}>Decrease</button>
-      </div>
-    )
-  };
+  const increaseCount = () => setCount(count + 1);
+  // const decreaseCount = ()=>{
+  //   const newCount = count - 1;
+  //   setCount(newCount)
+  // }
+  return (
+    <div>
+      <h1>Count : {count}</h1>
+      <button onClick={increaseCount}>Increase </button>
+    </div>
+  );
+}
 
 export default App;
